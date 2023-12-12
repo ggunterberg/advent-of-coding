@@ -1,14 +1,13 @@
 package gunterbergg.advent_of_code.y2023.day1;
 
-import gunterbergg.advent_of_code.y2023.commons.DayStar;
-import gunterbergg.advent_of_code.y2023.commons.DayStarResource;
+import gunterbergg.advent_of_code.commons.AdventOfCodeTask;
+import gunterbergg.advent_of_code.commons.AdventOfCodeStream;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-public class Day1Star1 extends DayStar {
+public class Day1Star1 extends AdventOfCodeTask<Integer> {
 
   public static void main(String[] args) {
     final var inst = Day1Star1.of(args);
@@ -31,13 +30,10 @@ public class Day1Star1 extends DayStar {
   }
 
   @Override
-  public Integer process(DayStarResource resource) {
-    return resource
-      .stream()
-      .map(in -> in
-        .produce((index, line) -> decoder.decode(line))
-        .mapToInt(Integer::valueOf)
-        .sum())
-      .orElseThrow(() -> new IllegalArgumentException("Invalid path"));
+  public Integer process(AdventOfCodeStream stream) {
+    return stream
+      .produce((index, line) -> decoder.decode(line))
+      .mapToInt(Integer::valueOf)
+      .sum();
   }
 }

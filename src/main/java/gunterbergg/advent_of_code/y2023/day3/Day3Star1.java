@@ -1,20 +1,35 @@
 package gunterbergg.advent_of_code.y2023.day3;
 
-import gunterbergg.advent_of_code.y2023.commons.DayStarResource;
+import gunterbergg.advent_of_code.commons.AdventOfCodeTask;
+import gunterbergg.advent_of_code.commons.AdventOfCodeStream;
 
-public class Day3Star1 {
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-//  public static void main(String[] args) {
-//    final var inst = new Day3Star1();
-//    defaultFilePath(args, inst::process);
-//  }
-//
-//  public void process(Path path) {
-//    final var parser = new DefaultEngineSchematicParser();
-//    read(path, br -> {
-//      final var engineSchematic = parser.parse(br);
-//      final var formattedResult = String.valueOf(engineSchematic.calculateParts());
-//      logger.info(formattedResult);
-//    });
-//  }
+public class Day3Star1 extends AdventOfCodeTask<Integer> {
+
+  public static void main(String[] args) {
+    final var inst = Day3Star1.of(args);
+    inst.answer();
+  }
+
+  private final EngineSchematicParser parser;
+
+  private Day3Star1(Collection<String> paths) {
+    super(paths);
+    parser = new EngineSchematicPartParser();
+  }
+
+  public static Day3Star1 of(String[] args) {
+    final var paths = new ArrayList<>(List.of(args));
+    paths.add("/inputs/day3");
+    return new Day3Star1(paths);
+  }
+
+  @Override
+  public Integer process(AdventOfCodeStream stream) {
+    parser.parse(stream);
+    return 1;
+  }
 }

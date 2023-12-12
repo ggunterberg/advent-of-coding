@@ -1,8 +1,11 @@
-package gunterbergg.advent_of_code.y2023.commons;
+package gunterbergg.advent_of_code.commons;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,22 +14,22 @@ import java.util.function.BiFunction;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static org.apache.commons.io.IOUtils.buffer;
+public class AdventOfCodeStream implements AutoCloseable {
 
-public class DayStarStream implements AutoCloseable {
+  private static final Logger logger = LoggerFactory.getLogger(AdventOfCodeStream.class);
 
   private final InputStream inputStream;
 
-  private DayStarStream(InputStream inputStream) {
+  private AdventOfCodeStream(InputStream inputStream) {
     this.inputStream = inputStream;
   }
 
-  public static DayStarStream of(InputStream inputStream) {
-    return new DayStarStream(inputStream);
+  public static AdventOfCodeStream of(InputStream inputStream) {
+    return new AdventOfCodeStream(inputStream);
   }
 
   public void consume(BiConsumer<Integer, String> consumer) {
-    final var iterator = new LineIterator(buffer((new InputStreamReader(inputStream))));
+    final var iterator = new LineIterator(buffer());
     IntStream
       .iterate(0, i -> i + 1)
       .takeWhile(i -> iterator.hasNext())
@@ -38,7 +41,7 @@ public class DayStarStream implements AutoCloseable {
   }
 
   public <T> Stream<T> produce(BiFunction<Integer, String, T> function) {
-    final var iterator = new LineIterator(buffer((new InputStreamReader(inputStream))));
+    final var iterator = new LineIterator(buffer());
     return
       IntStream
         .iterate(0, i -> i + 1)
@@ -50,10 +53,17 @@ public class DayStarStream implements AutoCloseable {
         });
   }
 
+  private BufferedReader buffer() {
+    return IOUtils.buffer(new InputStreamReader(inputStream));
+  }
+
   @Override
   public void close() {
     try {
       inputStream.close();
-    } catch (IOException e) {}
+    } catch (IOException e) {
+      // NOOP, simply ignore an not closed stream
+      logger.warn("Error when closing DayStarStream", e);
+    }
   }
 }

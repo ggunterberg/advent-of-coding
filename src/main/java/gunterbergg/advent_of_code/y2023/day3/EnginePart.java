@@ -4,8 +4,7 @@ import org.immutables.value.Value;
 
 @Value.Style(allParameters = true)
 @Value.Immutable
-public abstract class Position {
+public interface EnginePart {
 
-  abstract Integer x();
-  abstract Integer y();
+  Integer num();
 }

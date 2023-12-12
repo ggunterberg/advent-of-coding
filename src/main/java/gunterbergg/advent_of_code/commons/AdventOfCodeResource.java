@@ -1,4 +1,4 @@
-package gunterbergg.advent_of_code.y2023.commons;
+package gunterbergg.advent_of_code.commons;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,34 +9,34 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 
-public class DayStarResource implements AutoCloseable {
+public class AdventOfCodeResource implements AutoCloseable {
 
-  protected final static Logger logger = LoggerFactory.getLogger(DayStarResource.class);
+  protected static final Logger logger = LoggerFactory.getLogger(AdventOfCodeResource.class);
 
   private final URI target;
   private Optional<InputStream> inputStream;
 
-  private DayStarResource(URI target) {
+  private AdventOfCodeResource(URI target) {
     this.target = target;
     this.inputStream = Optional.empty();
   }
 
-  public static DayStarResource of(String path) {
+  public static AdventOfCodeResource of(String path) {
     Objects.requireNonNull(path, "path must not be null");
     final var targetURI = URI.create(path);
-    return new DayStarResource(targetURI);
+    return new AdventOfCodeResource(targetURI);
   }
 
-  public Optional<DayStarStream> stream() {
+  public Optional<AdventOfCodeStream> stream() {
     inputStream = Optional.ofNullable(getClass().getResourceAsStream(target.getPath()));
-    return inputStream.isPresent() ? Optional.of(DayStarStream.of(inputStream.get())) : Optional.empty();
+    return inputStream.isPresent() ? Optional.of(AdventOfCodeStream.of(inputStream.get())) : Optional.empty();
   }
 
   public static boolean verifyResouce(String path) {
     if (path == null) return false;
     try {
       final var targetURI = URI.create(path);
-      return DayStarResource.class.getResource(targetURI.getPath()) != null;
+      return AdventOfCodeResource.class.getResource(targetURI.getPath()) != null;
     } catch (Exception e) {
       return false;
     }

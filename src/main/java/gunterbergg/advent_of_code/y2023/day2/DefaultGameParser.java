@@ -34,12 +34,11 @@ public class DefaultGameParser implements GameParser {
       .stream(gameRoundsUnparsed)
       .map(unparsedRound -> {
         final var unparsedInfoList = Arrays.stream(split(unparsedRound, ",")).toList();
-        final var roundInfos = new GameData.GameRound(
+        return new GameData.GameRound(
           getColor(GameData.CubeColor.RED, unparsedInfoList),
           getColor(GameData.CubeColor.GREEN, unparsedInfoList),
           getColor(GameData.CubeColor.BLUE, unparsedInfoList)
         );
-        return roundInfos;
       })
       .toList();
   }
