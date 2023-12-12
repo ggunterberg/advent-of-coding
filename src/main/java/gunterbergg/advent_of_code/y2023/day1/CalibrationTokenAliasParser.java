@@ -19,7 +19,7 @@ public class CalibrationTokenAliasParser implements CalibrationDocumentParser {
     final var tokenList = new ArrayList<TokenPosition>();
     var index = 0;
     do {
-      final var tokenPos = str.indexOf(tokenAlias.getAlias());
+      final var tokenPos = str.indexOf(tokenAlias.getAlias(), index);
       if (tokenPos == -1) break;
       tokenList.add(new TokenPosition(tokenAlias.getToken(), tokenPos));
       index = tokenPos + 1;

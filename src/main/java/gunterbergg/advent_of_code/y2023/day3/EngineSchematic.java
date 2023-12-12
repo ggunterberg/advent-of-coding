@@ -1,48 +1,44 @@
 package gunterbergg.advent_of_code.y2023.day3;
 
 import org.immutables.value.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Value.Immutable
 public abstract class EngineSchematic {
 
-  private final List<SchematicEntity> entityList;
+  private static final Logger logger = LoggerFactory.getLogger(EngineSchematic.class);
 
-  public EngineSchematic(List<SchematicEntity> entityList) {
-    this.entityList = entityList;
-  }
+  public abstract List<SchematicEntity> entities();
 
   public Integer calculateParts() {
-    final var verifyAdjecentsList = entityList
+    final var symbols = entities()
       .stream()
       .filter(entity -> entity instanceof SymbolSchematicEntity)
       .toList();
 
-    final var adjecentDigits = new ArrayList<DigitSchematicEntity>();
-    do {
-      verifyAdjecentsList
-        .stream()
-        .map()
-
-    } while (!verifyAdjecentsList.isEmpty());
-  }
-
-  protected List<SchematicEntity> getAdjecent(){
-    final var positions = getPositionsMap();
-    positions.get()
-  }
-
-  @Value.Lazy
-  protected Map<Position, List<SchematicEntity>> getPositionsMap() {
-    return entityList
+    final var adjecentDigits = symbols
       .stream()
-      .collect(Collectors
-        .groupingBy(schematicEntity -> schematicEntity.boundary().position())
-      );
+      .map(symbol -> getAdjecent(symbol.boundary().position()))
+      .flatMap(List::stream)
+      .filter(DigitSchematicEntity.class::isInstance)
+      .map(DigitSchematicEntity.class::cast)
+      .toList();
+
+    return adjecentDigits
+      .stream()
+      .mapToInt(DigitSchematicEntity::number)
+      .sum();
+  }
+
+  protected List<SchematicEntity> getAdjecent(Position position){
+    final var xboundary = ImmutableXBoundary.of(1, position);
+    return
+      entities()
+        .stream()
+        .filter(e -> e.boundary().isAdjecent(xboundary))
+        .toList();
   }
 }
